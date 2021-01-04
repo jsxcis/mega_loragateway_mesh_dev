@@ -46,6 +46,7 @@ void setup()
 {
     pinMode(RFM95_RST, OUTPUT);
     digitalWrite(RFM95_RST, HIGH);
+    pinMode(RFM95_INT, INPUT); 
   
     Serial.begin(115200);     // communication with the host computer
     pinMode(LORA_SEND, OUTPUT);
@@ -57,6 +58,11 @@ void setup()
     Serial.println("");
 
     manager = new RHMesh(rf95, nodeId);
+    
+    digitalWrite(RFM95_RST, LOW);
+    delay(10);
+    digitalWrite(RFM95_RST, HIGH);
+    delay(10);
 
     if (!manager->init()) {
       Serial.println(F("init failed"));
@@ -110,10 +116,10 @@ void loop()
     }
   }
 
-     sensorData = receiveFromMesh();
+    sensorData = receiveFromMesh();
     if (sensorData != "")
     {
-        Serial.println("Got valid command - sending data");
+        Serial.println("Got valid response - returning data");
         Serial.println(sensorData);
         writeData(sensorData);
     } 
